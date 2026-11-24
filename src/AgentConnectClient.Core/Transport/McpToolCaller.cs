@@ -22,7 +22,11 @@ public sealed class McpToolCaller : IDisposable
     {
         if (handler is null)
         {
-            _handler = new SocketsHttpHandler();
+            // A redirect must not carry the Member token to another host.
+            _handler = new SocketsHttpHandler
+            {
+                AllowAutoRedirect = false,
+            };
             _ownsHandler = true;
         }
         else

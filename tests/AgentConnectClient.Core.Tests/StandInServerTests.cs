@@ -174,7 +174,56 @@ public sealed class StandInServerTests
         }
     }
 
+    [Fact(Timeout = 20000)]
+    public async Task RunRest_Redirect_IsNotFollowedAndAdminKeyIsNotSent()
+    {
+        await using var other = new StandInServer(_ => new StandInResponse(200, "{\"stolen\":true}"));
+        await using var server = new StandInServer(_ => RedirectTo(other.BaseUrl + "/stolen"));
+        using var service = new AgentConnectCallService();
+        var settings = SampleSettings.Create() with
+        {
+            RestBaseUrl = server.BaseUrl,
+            AdminKey = "admin-key-value",
+        };
+        var entry = await service.RunRestAsync(settings, 0, "POST", "/tenants", ExampleJson.ForRestEndpoint("POST", "/tenants"));
+
+        Assert.Equal("302", entry.Status);
+        Assert.Contains("moved", entry.Result, StringComparison.Ordinal);
+        Assert.False(entry.ClientError);
+        Assert.Empty(other.Requests);
+        Assert.Equal("admin-key-value", Header(server.Requests[0], "X-Admin-Key"));
+        Assert.DoesNotContain("admin-key-value", string.Join("\n", other.Requests.Select(request => request.RawUrl)), StringComparison.Ordinal);
+    }
+
+    [Fact(Timeout = 20000)]
+    public async Task RunMcp_Redirect_IsNotFollowedAndTokenIsNotSent()
+    {
+        await using var other = new StandInServer(_ => new StandInResponse(200, "{\"stolen\":true}"));
+        await using var server = new StandInServer(_ => RedirectTo(other.BaseUrl + "/stolen"));
+        using var service = new AgentConnectCallService();
+        var settings = SampleSettings.Create() with { McpServerUrl = server.BaseUrl + "/mcp" };
+        var entry = await service.RunMcpAsync(settings, 0, "list_workspaces", ExampleJson.ForMcpTool("list_workspaces"));
+
+        Assert.Equal("302", entry.Status);
+        Assert.Contains("moved", entry.Result, StringComparison.Ordinal);
+        Assert.False(entry.ClientError);
+        Assert.Empty(other.Requests);
+        Assert.Equal("Bearer token-a", Header(server.Requests[0], "Authorization"));
+    }
+
     #region private
+
+    private static StandInResponse RedirectTo(string location)
+    {
+        return new StandInResponse(
+            302,
+            "{\"error\":\"moved\"}",
+            "application/json",
+            new Dictionary<string, string>
+            {
+                ["Location"] = location,
+            });
+    }
 
     private static string Header(ObservedRequest request, string name)
     {

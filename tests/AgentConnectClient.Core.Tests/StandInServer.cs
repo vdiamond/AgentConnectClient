@@ -129,6 +129,14 @@ internal sealed class StandInServer : IAsyncDisposable
         var response = handler(observed);
         var bytes = Encoding.UTF8.GetBytes(response.Body);
         context.Response.StatusCode = response.StatusCode;
+        if (response.Headers is not null)
+        {
+            foreach (var header in response.Headers)
+            {
+                context.Response.Headers[header.Key] = header.Value;
+            }
+        }
+
         if (response.ContentType.Length > 0)
         {
             context.Response.ContentType = response.ContentType;
@@ -154,7 +162,11 @@ internal sealed record ObservedRequest(
     IReadOnlyDictionary<string, string> Headers,
     string? ContentType);
 
-internal sealed record StandInResponse(int StatusCode, string Body, string ContentType = "application/json");
+internal sealed record StandInResponse(
+    int StatusCode,
+    string Body,
+    string ContentType = "application/json",
+    IReadOnlyDictionary<string, string>? Headers = null);
 
 internal static class McpStandIn
 {

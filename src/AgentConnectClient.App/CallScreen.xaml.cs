@@ -163,6 +163,16 @@ public partial class CallScreen : UserControl
     }
 
     /// <summary>
+    /// Shows or hides the warning that the saved URL is http.
+    /// </summary>
+    /// <param name="isCleartextHttp">Whether the URL for this screen uses http.</param>
+    public void SetCleartextWarning(bool isCleartextHttp)
+    {
+        CleartextWarning.Text = isCleartextHttp ? CleartextHttp.Warning : "";
+        CleartextWarning.Visibility = isCleartextHttp ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    /// <summary>
     /// Shows a finished call in the result pane and appends it to the log.
     /// </summary>
     /// <param name="entry">The call-log entry.</param>

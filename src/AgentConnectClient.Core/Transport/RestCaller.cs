@@ -19,7 +19,11 @@ public sealed class RestCaller : IDisposable
     {
         if (handler is null)
         {
-            _handler = new SocketsHttpHandler();
+            // A redirect must not carry X-Admin-Key or a Member token to another host.
+            _handler = new SocketsHttpHandler
+            {
+                AllowAutoRedirect = false,
+            };
             _ownsHandler = true;
         }
         else

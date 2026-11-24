@@ -8,6 +8,7 @@
     </Grid.ColumnDefinitions>
     <DockPanel Grid.Column="0" Margin="0,0,12,0">
       <TextBlock x:Name="TitleText" DockPanel.Dock="Top" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8"/>
+      <TextBlock x:Name="CleartextWarning" DockPanel.Dock="Top" TextWrapping="Wrap" Foreground="#B45309" Margin="0,0,0,8" Visibility="Collapsed"/>
       <ListBox x:Name="CallList" SelectionChanged="CallList_SelectionChanged"/>
     </DockPanel>
     <Grid Grid.Column="1">

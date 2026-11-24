@@ -5,9 +5,10 @@
     <StackPanel Margin="16" MaxWidth="720" HorizontalAlignment="Left">
       <TextBlock Text="Settings" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
       <TextBlock Text="MCP server URL"/>
-      <TextBox x:Name="McpUrlBox" Margin="0,4,0,10"/>
+      <TextBox x:Name="McpUrlBox" Margin="0,4,0,10" TextChanged="UrlBox_TextChanged"/>
       <TextBlock Text="REST base URL"/>
-      <TextBox x:Name="RestUrlBox" Margin="0,4,0,10"/>
+      <TextBox x:Name="RestUrlBox" Margin="0,4,0,4" TextChanged="UrlBox_TextChanged"/>
+      <TextBlock x:Name="UrlWarningText" TextWrapping="Wrap" Foreground="#B45309" Margin="0,0,0,10" Visibility="Collapsed"/>
       <TextBlock Text="Admin key"/>
       <PasswordBox x:Name="AdminKeyBox" Margin="0,4,0,10"/>
       <TextBlock Text="Saved tokens" FontWeight="SemiBold" Margin="0,8,0,4"/>

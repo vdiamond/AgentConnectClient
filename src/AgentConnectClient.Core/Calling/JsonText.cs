@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace AgentConnectClient.Calling;
@@ -21,7 +22,7 @@ public static class JsonText
         {
             using var document = JsonDocument.Parse(text);
             using var stream = new MemoryStream();
-            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
+            using (var writer = new Utf8JsonWriter(stream, PrettyWriterOptions))
             {
                 document.WriteTo(writer);
             }
@@ -77,4 +78,16 @@ public static class JsonText
 
         return null;
     }
+
+    #region private
+
+    // The default encoder rewrites '+', apostrophes and non-ASCII as \u escapes.
+    // Server text, including tokens, must stay character-for-character apart from indentation.
+    private static readonly JsonWriterOptions PrettyWriterOptions = new()
+    {
+        Indented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
+    #endregion
 }

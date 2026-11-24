@@ -33,7 +33,7 @@ dotnet run --project src/AgentConnectClient.App/AgentConnectClient.App.csproj
 
 Settings are plain text at `%USERPROFILE%\AgentConnectClient\settings.json`. Token values and the admin key are stored unencrypted. Each Windows user has a separate file. The call log is kept in memory for the current session only and does not include those secret values.
 
-A saved token is sent as `Authorization: Bearer <token>`. Paste the token value itself, without the `Bearer` prefix. Platform-operator routes (`POST /tenants`, send-invitation, suspend, resume, and `DELETE /tenants/{id}`) send `X-Admin-Key` and do not send a Member token.
+A saved token is sent as `Authorization: Bearer <token>`. Paste the token value itself, without the `Bearer` prefix. Platform-operator routes (`POST /tenants`, send-invitation, suspend, resume, and `DELETE /tenants/{id}`) send `X-Admin-Key` and do not send a Member token. An `http://` URL is accepted and shows a warning, because the admin key and tokens then travel in clear text. Redirects are not followed.
 
 ## Publish a folder you can copy to Windows
 

@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using AgentConnectClient.Calling;
 using AgentConnectClient.Settings;
 
 namespace AgentConnectClient.App;
@@ -129,6 +130,13 @@ public partial class SettingsScreen : UserControl
     private void Save_Click(object sender, RoutedEventArgs e)
     {
         SaveRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void UrlBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        var cleartext = CleartextHttp.IsHttp(McpUrlBox.Text) || CleartextHttp.IsHttp(RestUrlBox.Text);
+        UrlWarningText.Text = cleartext ? CleartextHttp.Warning : "";
+        UrlWarningText.Visibility = cleartext ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void RefreshList()

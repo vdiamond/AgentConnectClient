@@ -192,6 +192,8 @@ public partial class MainWindow : Window
         var secrets = _settings.SecretValues();
         McpScreen.SetTokens(_settings.SavedTokens, secrets, selectIndex);
         RestScreen.SetTokens(_settings.SavedTokens, secrets, selectIndex);
+        McpScreen.SetCleartextWarning(CleartextHttp.IsHttp(_settings.McpServerUrl));
+        RestScreen.SetCleartextWarning(CleartextHttp.IsHttp(_settings.RestBaseUrl));
     }
 
     private void ShowMcp_Click(object sender, RoutedEventArgs e)
