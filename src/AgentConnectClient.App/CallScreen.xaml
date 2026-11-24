@@ -1,0 +1,75 @@
+<UserControl x:Class="AgentConnectClient.App.CallScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid Margin="12">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="280"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+    <DockPanel Grid.Column="0" Margin="0,0,12,0">
+      <TextBlock x:Name="TitleText" DockPanel.Dock="Top" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8"/>
+      <TextBlock x:Name="CleartextWarning" DockPanel.Dock="Top" TextWrapping="Wrap" Foreground="#B45309" Margin="0,0,0,8" Visibility="Collapsed"/>
+      <ListBox x:Name="CallList" SelectionChanged="CallList_SelectionChanged"/>
+    </DockPanel>
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="2*"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="2*"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="1.5*"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+      <Grid Grid.Row="0" Margin="0,0,0,8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="320"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Token" VerticalAlignment="Center"/>
+        <ComboBox x:Name="TokenBox" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+          <ComboBox.ItemContainerStyle>
+            <Style TargetType="ComboBoxItem">
+              <Setter Property="MinHeight" Value="22"/>
+            </Style>
+          </ComboBox.ItemContainerStyle>
+        </ComboBox>
+        <Button x:Name="RunButton" Grid.Column="3" Content="Run" IsEnabled="False" Click="RunButton_Click" Background="#2563EB" Foreground="White" BorderBrush="#2563EB"/>
+      </Grid>
+      <TextBox x:Name="EditorBox" Grid.Row="1" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="13"
+               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap"/>
+      <TextBlock Grid.Row="2" Text="Result" FontWeight="SemiBold" Margin="0,8,0,4"/>
+      <TextBox x:Name="ResultBox" Grid.Row="3" IsReadOnly="True" FontFamily="Consolas" FontSize="13" Background="White"
+               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
+      <Grid Grid.Row="4" Margin="0,8,0,8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Save token" VerticalAlignment="Center"/>
+        <PasswordBox x:Name="ReturnedTokenBox" Grid.Column="1" Margin="8,0,0,0"/>
+        <TextBlock Text="Description" Grid.Column="2" VerticalAlignment="Center" Margin="12,0,0,0"/>
+        <TextBox x:Name="ReturnedDescriptionBox" Grid.Column="3" Margin="8,0,0,0"/>
+        <Button x:Name="SaveTokenButton" Grid.Column="4" Content="Save token" Margin="12,0,0,0" Click="SaveTokenButton_Click"/>
+      </Grid>
+      <Grid Grid.Row="5">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Call log" FontWeight="SemiBold" Margin="0,0,0,4"/>
+        <Grid Grid.Row="1">
+          <ListBox x:Name="LogList" FontFamily="Consolas" FontSize="12" SelectionChanged="LogList_SelectionChanged"/>
+          <TextBlock x:Name="EmptyLogText" Text="No calls yet" Margin="8,4,0,0" Foreground="#6B7280" IsHitTestVisible="False"/>
+        </Grid>
+      </Grid>
+      <TextBox x:Name="DetailBox" Grid.Row="6" Margin="0,8,0,0" IsReadOnly="True" FontFamily="Consolas" FontSize="12"
+               VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="Wrap"/>
+    </Grid>
+  </Grid>
+</UserControl>

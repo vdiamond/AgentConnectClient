@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AgentConnectClient.App/AgentConnectClient.App.csproj" />
+    <Project Path="src/AgentConnectClient.Core/AgentConnectClient.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AgentConnectClient.Core.Tests/AgentConnectClient.Core.Tests.csproj" />
+  </Folder>
+</Solution>
