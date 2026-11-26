@@ -28,7 +28,7 @@ public sealed class FileSettingsStore
     public string FilePath { get; }
 
     /// <summary>
-    /// Loads settings. A missing file returns empty settings.
+    /// Loads settings. A missing file returns the built-in prototype URLs and no secrets.
     /// </summary>
     /// <param name="cancellationToken">The token to cancel the read.</param>
     /// <returns>The stored settings, or empty settings when the file does not exist yet.</returns>
