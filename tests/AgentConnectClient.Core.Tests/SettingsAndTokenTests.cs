@@ -52,6 +52,9 @@ public sealed class SettingsAndTokenTests
 
             Assert.Equal("", loaded.AdminKey);
             Assert.Empty(loaded.SavedTokens);
+            Assert.Equal(DefaultServerUrls.McpServerUrl, loaded.McpServerUrl);
+            Assert.Equal(DefaultServerUrls.RestBaseUrl, loaded.RestBaseUrl);
+            Assert.NotEqual(SampleSettings.Create().McpServerUrl, loaded.McpServerUrl);
             Assert.NotEqual(firstStore.FilePath, secondStore.FilePath);
         }
         finally
@@ -70,17 +73,65 @@ public sealed class SettingsAndTokenTests
     }
 
     [Fact]
-    public async Task LoadAsync_MissingFile_ReturnsEmptySettings()
+    public async Task LoadAsync_MissingFile_ReturnsBuiltInDefaultUrls()
     {
         var directory = CreateProfile("missing");
         try
         {
             var store = new FileSettingsStore(SettingsLocations.GetFilePathForProfile(directory));
             var loaded = await store.LoadAsync();
-            Assert.Equal("", loaded.McpServerUrl);
-            Assert.Equal("", loaded.RestBaseUrl);
+            Assert.Equal(DefaultServerUrls.McpServerUrl, loaded.McpServerUrl);
+            Assert.Equal(DefaultServerUrls.RestBaseUrl, loaded.RestBaseUrl);
             Assert.Equal("", loaded.AdminKey);
             Assert.Empty(loaded.SavedTokens);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LoadAsync_SavedUrls_AreNotReplacedByDefaults()
+    {
+        var directory = CreateProfile("saved-urls");
+        try
+        {
+            var path = SettingsLocations.GetFilePathForProfile(directory);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            await File.WriteAllTextAsync(
+                path,
+                """
+                {
+                  "mcpServerUrl": "",
+                  "restBaseUrl": "https://saved.example.test"
+                }
+                """);
+            var store = new FileSettingsStore(path);
+            var loaded = await store.LoadAsync();
+            Assert.Equal("", loaded.McpServerUrl);
+            Assert.Equal("https://saved.example.test", loaded.RestBaseUrl);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LoadAsync_FileWithoutUrlFields_UsesBuiltInDefaults()
+    {
+        var directory = CreateProfile("absent-urls");
+        try
+        {
+            var path = SettingsLocations.GetFilePathForProfile(directory);
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            await File.WriteAllTextAsync(path, """{"adminKey":"kept-key"}""");
+            var store = new FileSettingsStore(path);
+            var loaded = await store.LoadAsync();
+            Assert.Equal(DefaultServerUrls.McpServerUrl, loaded.McpServerUrl);
+            Assert.Equal(DefaultServerUrls.RestBaseUrl, loaded.RestBaseUrl);
+            Assert.Equal("kept-key", loaded.AdminKey);
         }
         finally
         {
@@ -163,6 +214,55 @@ public sealed class SettingsAndTokenTests
         Assert.DoesNotContain("admin-key", detail, StringComparison.Ordinal);
         Assert.Contains("token-a", entry.Result, StringComparison.Ordinal);
         Assert.Contains("admin-key", entry.Result, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ToDisplayLine_OneCharacterSecrets_LeaveOrdinaryWordsReadable()
+    {
+        var settings = new ClientSettings
+        {
+            McpServerUrl = "https://mcp.example.test/mcp",
+            RestBaseUrl = "https://api.example.test",
+            AdminKey = "e",
+            SavedTokens =
+            [
+                new SavedToken
+                {
+                    Token = "a",
+                    Description = "Ann",
+                },
+            ],
+        };
+        var entry = new CallLogEntry
+        {
+            Time = new DateTime(2026, 11, 24, 13, 19, 0),
+            Surface = CallSurface.Rest,
+            Name = "GET /workspaces",
+            Status = "200",
+            Request = "https://api.example.test/workspaces\nAuthorization: Bearer sent\n{}",
+            Result = """{"workspaces":[],"token":"a","admin":"e"}""",
+            TokenDescription = "Ann",
+            ClientError = false,
+            Succeeded = true,
+            ErrorText = null,
+        };
+
+        var line = entry.ToDisplayLine(settings.SecretValues());
+        Assert.Contains("GET /workspaces", line, StringComparison.Ordinal);
+        Assert.Contains("succeeded", line, StringComparison.Ordinal);
+        Assert.Contains("Ann", line, StringComparison.Ordinal);
+        Assert.DoesNotContain("***", line, StringComparison.Ordinal);
+
+        var detail = entry.ToLogDetail(settings.SecretValues());
+        Assert.Contains("workspaces", detail, StringComparison.Ordinal);
+        Assert.Contains("Bearer sent", detail, StringComparison.Ordinal);
+        Assert.Contains("example", detail, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"a\"", detail, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"e\"", detail, StringComparison.Ordinal);
+        Assert.Contains("\"token\":\"***\"", detail, StringComparison.Ordinal);
+        Assert.Contains("\"admin\":\"***\"", detail, StringComparison.Ordinal);
+        Assert.Contains("\"token\":\"a\"", entry.Result, StringComparison.Ordinal);
+        Assert.Contains("\"admin\":\"e\"", entry.Result, StringComparison.Ordinal);
     }
 
     #region private

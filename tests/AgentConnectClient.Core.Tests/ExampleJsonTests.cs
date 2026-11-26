@@ -110,7 +110,7 @@ public sealed class ExampleJsonTests
     }
 
     [Fact]
-    public void ForMcpTool_UpdateNameAndDescription_ArePlaceholderStrings()
+    public void ForMcpTool_UpdateWorkspaceAndUpdateList_T18_NameAndDescriptionArePlaceholderStrings()
     {
         AssertNameAndDescriptionAreStrings(ExampleJson.ForMcpTool("update_workspace"), "Example Workspace");
         AssertNameAndDescriptionAreStrings(ExampleJson.ForMcpTool("update_list"), "Example List");

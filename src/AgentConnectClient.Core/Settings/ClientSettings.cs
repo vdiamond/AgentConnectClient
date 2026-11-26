@@ -6,14 +6,14 @@ namespace AgentConnectClient.Settings;
 public sealed record ClientSettings
 {
     /// <summary>
-    /// Gets the full MCP Streamable HTTP URL. Empty until the user sets it.
+    /// Gets the full MCP Streamable HTTP URL. A new settings object uses <see cref="DefaultServerUrls.McpServerUrl"/>.
     /// </summary>
-    public string McpServerUrl { get; init; } = "";
+    public string McpServerUrl { get; init; } = DefaultServerUrls.McpServerUrl;
 
     /// <summary>
-    /// Gets the REST base URL. Empty until the user sets it.
+    /// Gets the REST base URL. A new settings object uses <see cref="DefaultServerUrls.RestBaseUrl"/>.
     /// </summary>
-    public string RestBaseUrl { get; init; } = "";
+    public string RestBaseUrl { get; init; } = DefaultServerUrls.RestBaseUrl;
 
     /// <summary>
     /// Gets the platform admin key sent as <c>X-Admin-Key</c>.

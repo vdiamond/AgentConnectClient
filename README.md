@@ -25,7 +25,12 @@ dotnet test AgentConnectClient.slnx -c Release
 
 ## Run on Windows
 
-There are no default server URLs. After the app opens, choose **Settings**, paste the MCP server URL and the REST base URL, set the admin key, add any Member tokens, and choose **Save**.
+On a first run, and when the settings file does not exist yet, the MCP server URL and REST base URL are the built-in prototype defaults:
+
+- MCP: `https://ac-mcp.greenpond-2de37f99.eastus.azurecontainerapps.io/mcp`
+- REST: `https://ac-api.greenpond-2de37f99.eastus.azurecontainerapps.io`
+
+URLs you have already saved are left as they are. Clearing a URL and choosing **Save** keeps it empty. Choose **Settings** to change the URLs, set the admin key, add Member tokens, and choose **Save**. Against AgentConnect v8, tokens arrive by email and are pasted into Settings. A result that contains a plaintext token (AgentConnect v9 or later) can be saved from the result with **Save token**. A live v9 host is not a built-in default; paste it in Settings if you want to use one.
 
 ```bash
 dotnet run --project src/AgentConnectClient.App/AgentConnectClient.App.csproj
