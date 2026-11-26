@@ -1,12 +1,14 @@
 # AgentConnectClient
 
-Windows desktop app for acceptance-testing AgentConnect. It calls every AgentConnect v8 MCP tool and every v8 REST endpoint. Picking a call fills in example JSON you can edit. Running it shows the raw result and a call log.
+Windows desktop app for acceptance-testing [AgentConnect](https://github.com/vdiamond/AgentConnect). It calls every AgentConnect v8 MCP tool and every v8 REST endpoint. That v8 catalog is intentional. Picking a call fills in example JSON you can edit. Running it shows the raw result and a call log.
 
 The app runs on Windows. The class library and its tests target `net10.0` and run on Linux. The WPF project targets `net10.0-windows` and sets `EnableWindowsTargeting`, so it also compiles on Linux.
 
+Agent guidance is in [AGENTS.md](AGENTS.md).
+
 ## Requirements
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/download) to build
+- [.NET SDK 10.0.404](https://dotnet.microsoft.com/download) or a later 10.0 SDK. `global.json` pins `10.0.404` with `rollForward` set to `latestFeature`.
 - Windows and the .NET 10 desktop runtime to run a framework-dependent build
 
 ## Build
