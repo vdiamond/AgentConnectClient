@@ -78,3 +78,7 @@ Copy that folder to the Windows machine and run the exe. v1 does not ship an ins
 - Editor text that is valid JSON but not an object is reported as `Request is not valid JSON`.
 - The result pane shows the server result unchanged, including a token the server returned. The call log redacts stored token values and the admin key. Choose **Save token**, paste the value from the result, enter a description, and the new token is written to the settings file and can be selected on the next call.
 - Settings changes are written when you choose **Save**. **Remove** deletes a saved token from the list; choose **Save** to keep that change.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
